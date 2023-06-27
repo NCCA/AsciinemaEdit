@@ -89,6 +89,7 @@ class MainWindow(QMainWindow):
         if file != "":
             self._process_cast_file(file)
         self.current_line = 0
+        self.load.clicked.connect(self.load_clicked)
         # self.startTimer(100)
         self.frame.setMinimum(0)
         self.frame.setMaximum(len(self.cast_data) - 1)
@@ -98,6 +99,22 @@ class MainWindow(QMainWindow):
         self.play_pause.setIcon(icon)
         self.play_pause.clicked.connect(self.play_pause_clicked)
         self.save_as.clicked.connect(self.save_as_clicked)
+
+    def load_clicked(self):
+        file_name, _ = QFileDialog.getOpenFileName(
+            self,
+            "Open Range",
+            "",
+            ("Cast File (*.cast)"),
+        )
+        if file_name is not None:
+            self.cast_data = []
+            self._process_cast_file(file_name)
+            self.start_frame.setValue(0)
+            self.end_frame.setValue(len(self.cast_data) - 1)
+            self.frame.setMinimum(0)
+            self.frame.setMaximum(len(self.cast_data) - 1)
+            self.play_pause.setChecked(True)  # auto play on load
 
     def save_as_clicked(self):
         file_name, _ = QFileDialog.getSaveFileName(
